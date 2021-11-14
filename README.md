@@ -1,1 +1,5 @@
-NCKY cvdl hw1
+NCKU cvdl hw1
+
+```
+python main.py
+```
