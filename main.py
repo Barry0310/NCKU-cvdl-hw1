@@ -17,8 +17,6 @@ class MainWindow(QMainWindow):
         name = 'Sun.jpg'
         pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q1_Image/'+name)
         cv2.imshow(name, pic)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
 
     def colorSeperation(self):
         name = 'Sun.jpg'
@@ -28,13 +26,16 @@ class MainWindow(QMainWindow):
         cv2.imshow('R', cv2.merge([zeros, zeros, R]))
         cv2.imshow('G', cv2.merge([zeros, G, zeros]))
         cv2.imshow('B', cv2.merge([B, zeros, zeros]))
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
 
     def colorTransformation(self):
         name = 'Sun.jpg'
         pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q1_Image/' + name)
-        cv2.imshow('l1', cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY))
+        l1 = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY)
+        cv2.imshow('l1', l1)
+        (B, G, R) = cv2.split(pic)
+        l2 = (R.astype(int) + G.astype(int) + B.astype(int))/3
+        l2 = l2.astype('uint8')
+        cv2.imshow('l2', l2.astype('uint8'))
 
 if __name__ == '__main__':
     app = QApplication([])
