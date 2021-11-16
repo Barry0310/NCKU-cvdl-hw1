@@ -13,6 +13,9 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_2.clicked.connect(self.colorSeperation)
         self.ui.pushButton_3.clicked.connect(self.colorTransformation)
         self.ui.pushButton_4.clicked.connect(self.blending)
+        self.ui.pushButton_5.clicked.connect(self.gaussianBlur)
+        self.ui.pushButton_6.clicked.connect(self.bilateralFilter)
+        self.ui.pushButton_7.clicked.connect(self.medianFilter)
 
 
     def loadImage(self):
@@ -53,6 +56,24 @@ class MainWindow(QMainWindow):
             r = float(r) / 255.0
             img = cv2.addWeighted(big, 1.0 - r, small, r, 0)
         cv2.destroyWindow('Blend')
+
+    def gaussianBlur(self):
+        pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q2_Image/Lenna_whiteNoise.jpg')
+        blur = cv2.GaussianBlur(pic, (5, 5), 0)
+        cv2.imshow('Gaussian Blur', blur)
+
+    def bilateralFilter(self):
+        pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q2_Image/Lenna_whiteNoise.jpg')
+        bilateral = cv2.bilateralFilter(pic, 9, 90, 90)
+        cv2.imshow('Bilateral Filter', bilateral)
+
+    def medianFilter(self):
+        pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q2_Image/Lenna_pepperSalt.jpg')
+        median3 = cv2.medianBlur(pic, 3)
+        median5 = cv2.medianBlur(pic, 5)
+        cv2.imshow('Median Filter 3x3', median3)
+        cv2.imshow('Median Filter 5x5', median5)
+
 
 if __name__ == '__main__':
     app = QApplication([])
