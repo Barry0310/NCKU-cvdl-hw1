@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_16.clicked.connect(self.magnitude)
         self.ui.pushButton_9.clicked.connect(self.resizee)
         self.ui.pushButton_10.clicked.connect(self.translation)
+        self.ui.pushButton_11.clicked.connect(self.rotation)
 
 
     def loadImage(self):
@@ -143,6 +144,8 @@ class MainWindow(QMainWindow):
     def resizee(self):
         pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q4_Image/SQUARE-01.png')
         pic = cv2.resize(pic, (256, 256))
+        cv2.namedWindow('Resize', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('Resize', 400, 300)
         cv2.imshow('Resize', pic)
 
     def translation(self):
@@ -151,8 +154,22 @@ class MainWindow(QMainWindow):
         t = np.float32([[1, 0, 0],
                         [0, 1, 60]])
         shifted = cv2.warpAffine(pic, t, (pic.shape[0], pic.shape[1]))
+        cv2.namedWindow('Translation', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('Translation', 400, 300)
         cv2.imshow('Translation', shifted)
 
+    def rotation(self):
+        pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q4_Image/SQUARE-01.png')
+        pic = cv2.resize(pic, (256, 256))
+        t = np.float32([[1, 0, 0],
+                        [0, 1, 60]])
+        shifted = cv2.warpAffine(pic, t, (pic.shape[0], pic.shape[1]))
+        t = cv2.getRotationMatrix2D((128, 188), 10, 1.0)
+        print(t)
+        shifted = cv2.warpAffine(shifted, t, (pic.shape[0], pic.shape[1]))
+        cv2.namedWindow('Rotation', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('Rotation', 400, 300)
+        cv2.imshow('Rotation', shifted)
 
 if __name__ == '__main__':
     app = QApplication([])
