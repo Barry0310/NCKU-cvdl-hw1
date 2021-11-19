@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_9.clicked.connect(self.resizee)
         self.ui.pushButton_10.clicked.connect(self.translation)
         self.ui.pushButton_11.clicked.connect(self.rotation)
+        self.ui.pushButton_12.clicked.connect(self.shearing)
 
 
     def loadImage(self):
@@ -144,8 +145,6 @@ class MainWindow(QMainWindow):
     def resizee(self):
         pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q4_Image/SQUARE-01.png')
         pic = cv2.resize(pic, (256, 256))
-        cv2.namedWindow('Resize', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('Resize', 400, 300)
         cv2.imshow('Resize', pic)
 
     def translation(self):
@@ -153,9 +152,7 @@ class MainWindow(QMainWindow):
         pic = cv2.resize(pic, (256, 256))
         t = np.float32([[1, 0, 0],
                         [0, 1, 60]])
-        shifted = cv2.warpAffine(pic, t, (pic.shape[0], pic.shape[1]))
-        cv2.namedWindow('Translation', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('Translation', 400, 300)
+        shifted = cv2.warpAffine(pic, t, (400, 300))
         cv2.imshow('Translation', shifted)
 
     def rotation(self):
@@ -163,13 +160,32 @@ class MainWindow(QMainWindow):
         pic = cv2.resize(pic, (256, 256))
         t = np.float32([[1, 0, 0],
                         [0, 1, 60]])
-        shifted = cv2.warpAffine(pic, t, (pic.shape[0], pic.shape[1]))
-        t = cv2.getRotationMatrix2D((128, 188), 10, 1.0)
-        print(t)
-        shifted = cv2.warpAffine(shifted, t, (pic.shape[0], pic.shape[1]))
-        cv2.namedWindow('Rotation', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('Rotation', 400, 300)
-        cv2.imshow('Rotation', shifted)
+        shifted = cv2.warpAffine(pic, t, (400, 300))
+        new = np.zeros((300, 400, 3), dtype='uint8')
+        scale = cv2.resize(shifted[60:, 0:256], (128, 120))
+        center = ((300-60)//2+60, (255-0)//2)
+        new[center[0]-60:center[0]+60, center[1]-64:center[1]+64, :] += scale
+        t = cv2.getRotationMatrix2D((center[1], center[0]), 10, 1.0)
+        new = cv2.warpAffine(new, t, (400, 300))
+        cv2.imshow('Rotation', new)
+
+    def shearing(self):
+        pic = cv2.imread('Dataset_OpenCvDl_Hw1/Q4_Image/SQUARE-01.png')
+        pic = cv2.resize(pic, (256, 256))
+        t = np.float32([[1, 0, 0],
+                        [0, 1, 60]])
+        shifted = cv2.warpAffine(pic, t, (400, 300))
+        new = np.zeros((300, 400, 3), dtype='uint8')
+        scale = cv2.resize(shifted[60:, 0:256], (128, 120))
+        center = ((300 - 60) // 2 + 60, (255 - 0) // 2)
+        new[center[0] - 60:center[0] + 60, center[1] - 64:center[1] + 64, :] += scale
+        t = cv2.getRotationMatrix2D((center[1], center[0]), 10, 1.0)
+        new = cv2.warpAffine(new, t, (400, 300))
+        pts1 = np.float32([[50, 50], [200, 50], [50, 200]])
+        pts2 = np.float32([[10, 100], [200, 50], [100, 250]])
+        t = cv2.getAffineTransform(pts1, pts2)
+        shifted = cv2.warpAffine(new, t, (400, 300))
+        cv2.imshow('Shearing', shifted)
 
 if __name__ == '__main__':
     app = QApplication([])
